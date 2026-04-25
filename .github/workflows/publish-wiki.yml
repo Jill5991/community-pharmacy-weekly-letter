@@ -4,7 +4,8 @@ on:
   push:
     branches: [main]
     paths:
-      - "reports/**.md"
+      - "reports/*.md"
+      - "reports/**/*.md"
 
   workflow_dispatch:
 
