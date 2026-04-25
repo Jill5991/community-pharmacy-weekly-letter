@@ -1,21 +1,13 @@
-# Twitter search queries for breast cancer content
+# Twitter / X search queries for community pharmacy content
 # Used by: fetcher.py
-# Each query is passed to the Twitter search API.
-# Tips:
-#   - Keep each query focused on one therapeutic area
-#   - "lang:en" limits to English tweets
-#   - OR groups multiple synonyms
-#   - Twitter search supports quoted phrases
 
 search_queries:
-  - "(breast cancer) (HER2 OR TNBC OR CDK4 OR palbociclib OR ribociclib OR abemaciclib)"
-  - "(breast cancer) (T-DXd OR Enhertu OR trastuzumab OR pertuzumab OR tucatinib)"
-  - "(breast cancer) (PARP OR olaparib OR talazoparib OR BRCA)"
-  - "(breast cancer) (PI3K OR alpelisib OR AKT OR capivasertib OR ESR1)"
-  - "(breast cancer) (immunotherapy OR PD-L1 OR pembrolizumab OR sacituzumab OR Trodelvy)"
-  - "(breast cancer) (DESTINY-Breast OR MONARCH OR MONALEESA OR PALOMA OR OlympiA OR ASCENT)"
-  - "(breast cancer) (imlunestrant OR elacestrant OR ESR1 OR SERD OR oral endocrine)"
-  - "(#breastcancer) (trial OR data OR abstract OR FDA OR approval OR OS OR PFS)"
-  - "(metastatic breast cancer) lang:en"
-  - "(early breast cancer) (neoadjuvant OR adjuvant OR pCR) lang:en"
-  - "(TNBC OR triple-negative breast) lang:en"
+  - "(GLP-1 OR semaglutide OR tirzepatide OR SGLT2 OR DPP-4 OR insulin) (diabetes OR obesity OR pharmacist)"
+  - "(NOAC OR DOAC OR statin OR heart failure OR RAAS OR beta-blocker OR CCB) (cardiology OR pharmacist OR guideline)"
+  - "(PPI OR vonoprazan OR H. pylori OR IBD OR Crohn OR ulcerative colitis) (gastroenterology OR pharmacist)"
+  - "(migraine OR CGRP OR epilepsy OR seizure OR dementia OR donepezil) (neurology OR pharmacist)"
+  - "(HRT OR menopause OR contraception OR OCP OR osteoporosis OR pregnancy) (obgyn OR pharmacist)"
+  - "(dental pain OR odontogenic infection OR amoxicillin OR clindamycin OR chlorhexidine) (dentistry OR pharmacist)"
+  - "(FDA OR MedWatch OR recall OR warning OR safety alert) (drug OR medication)"
+  - "(drug interaction OR DDI OR QT prolongation OR serotonin syndrome OR hyperkalemia) (pharmacist OR medication)"
+  - "(community pharmacy OR family medicine OR primary care) (polypharmacy OR deprescribing OR vaccine) lang:en"

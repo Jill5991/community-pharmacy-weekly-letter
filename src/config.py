@@ -15,7 +15,30 @@ def _load(filename: str) -> Any:
 
 @lru_cache(maxsize=None)
 def keywords() -> list[str]:
-    return _load("keywords.yml")["breast_cancer_keywords"]
+    data = _load("keywords.yml")
+    for key in ("topic_keywords", "keywords", "breast_cancer_keywords"):
+        value = data.get(key)
+        if isinstance(value, list):
+            return value
+    for value in data.values():
+        if isinstance(value, list):
+            return value
+    return []
+
+
+@lru_cache(maxsize=None)
+def topic_name() -> str:
+    return _load("keywords.yml").get("topic_name", "Community Pharmacy Weekly Letter")
+
+
+@lru_cache(maxsize=None)
+def topic_label() -> str:
+    return _load("keywords.yml").get("topic_label", "community pharmacy")
+
+
+@lru_cache(maxsize=None)
+def report_title() -> str:
+    return _load("keywords.yml").get("report_title", topic_name())
 
 
 @lru_cache(maxsize=None)

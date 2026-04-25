@@ -1,121 +1,204 @@
-# Drug / target group definitions for tweet and article classification
+# Drug / topic group definitions for tweet and article classification
 # Used by: reporter.py (trend aggregation)
-# Format: group_name: [keyword, ...]  (case-insensitive matching)
 
 drug_groups:
-  HER2-targeted:
-    - HER2
-    - trastuzumab
-    - pertuzumab
-    - T-DM1
-    - ado-trastuzumab
-    - T-DXd
-    - Enhertu
-    - trastuzumab deruxtecan
-    - tucatinib
-    - Tukysa
-    - lapatinib
-    - neratinib
-    - margetuximab
-    - DESTINY-Breast
+  GLP-1 receptor agonists:
+    - GLP-1
+    - semaglutide
+    - Ozempic
+    - Wegovy
+    - oral semaglutide
+    - Rybelsus
+    - tirzepatide
+    - Mounjaro
+    - Zepbound
 
-  CDK4/6 inhibitors:
-    - CDK4/6
-    - CDK4
-    - CDK6
-    - palbociclib
-    - Ibrance
-    - ribociclib
-    - Kisqali
-    - abemaciclib
-    - Verzenio
-    - MONARCH
-    - MONALEESA
-    - PALOMA
-    - NATALEE
+  SGLT2 inhibitors:
+    - SGLT2
+    - empagliflozin
+    - Jardiance
+    - dapagliflozin
+    - Farxiga
+    - canagliflozin
+    - ertugliflozin
 
-  PARP inhibitors:
-    - PARP
-    - olaparib
-    - Lynparza
-    - talazoparib
-    - Talzenna
-    - niraparib
-    - rucaparib
-    - BRCA
-    - OlympiA
+  DPP-4 inhibitors:
+    - DPP-4
+    - sitagliptin
+    - Januvia
+    - linagliptin
+    - Tradjenta
+    - saxagliptin
+    - alogliptin
 
-  PI3K/AKT/mTOR:
-    - PI3K
-    - alpelisib
-    - Piqray
-    - AKT
-    - capivasertib
-    - mTOR
-    - everolimus
-    - Afinitor
-    - PIK3CA
+  Insulin therapy:
+    - insulin
+    - insulin glargine
+    - insulin degludec
+    - insulin aspart
+    - insulin lispro
+    - basal insulin
 
-  Immunotherapy:
-    - immunotherapy
-    - checkpoint
-    - PD-1
-    - PD-L1
-    - pembrolizumab
-    - Keytruda
-    - atezolizumab
-    - Tecentriq
-    - TIL
-    - tumor infiltrating lymphocyte
-    - KEYNOTE-522
+  Statins & lipid lowering:
+    - statin
+    - atorvastatin
+    - rosuvastatin
+    - simvastatin
+    - pravastatin
+    - ezetimibe
+    - PCSK9
+    - inclisiran
 
-  ADC:
-    - ADC
-    - antibody-drug conjugate
-    - sacituzumab
-    - Trodelvy
-    - datopotamab
-    - Datroway
-    - datopot
-    - TROP2
-    - ASCENT
+  RAAS blockade:
+    - RAAS
+    - ACE inhibitor
+    - ACEi
+    - ARB
+    - lisinopril
+    - enalapril
+    - losartan
+    - valsartan
+    - irbesartan
+    - sacubitril/valsartan
 
-  Endocrine therapy:
-    - endocrine
-    - tamoxifen
-    - aromatase
-    - letrozole
-    - anastrozole
-    - exemestane
-    - fulvestrant
-    - Faslodex
-    - elacestrant
-    - Orserdu
-    - imlunestrant
-    - Inluriyo
-    - ESR1
-    - SERD
-    - EMBER
+  Beta-blockers:
+    - beta-blocker
+    - metoprolol
+    - carvedilol
+    - bisoprolol
+    - propranolol
+    - atenolol
+    - nebivolol
 
-  TNBC:
-    - TNBC
-    - triple negative
-    - triple-negative
-    - capecitabine
-    - carboplatin
-    - nab-paclitaxel
-    - Abraxane
+  Calcium channel blockers:
+    - CCB
+    - calcium channel blocker
+    - amlodipine
+    - nifedipine
+    - diltiazem
+    - verapamil
 
-# Conference / event keywords (used for flagging conference tweets)
+  Anticoagulants:
+    - anticoagulant
+    - anticoagulation
+    - NOAC
+    - DOAC
+    - apixaban
+    - Eliquis
+    - rivaroxaban
+    - Xarelto
+    - dabigatran
+    - warfarin
+
+  Proton pump inhibitors:
+    - PPI
+    - proton pump inhibitor
+    - omeprazole
+    - pantoprazole
+    - esomeprazole
+    - lansoprazole
+    - vonoprazan
+
+  IBD biologics:
+    - IBD
+    - Crohn
+    - ulcerative colitis
+    - infliximab
+    - adalimumab
+    - vedolizumab
+    - ustekinumab
+    - risankizumab
+    - biologic
+
+  Anti-epileptics:
+    - epilepsy
+    - seizure
+    - anti-epileptic
+    - levetiracetam
+    - lamotrigine
+    - valproate
+    - carbamazepine
+    - lacosamide
+
+  Migraine CGRP therapies:
+    - migraine
+    - CGRP
+    - ubrogepant
+    - rimegepant
+    - atogepant
+    - erenumab
+    - fremanezumab
+    - galcanezumab
+
+  Dementia therapies:
+    - dementia
+    - donepezil
+    - rivastigmine
+    - galantamine
+    - memantine
+
+  HRT:
+    - HRT
+    - hormone replacement therapy
+    - menopause
+    - estrogen
+    - progesterone
+    - estradiol
+
+  Contraceptives:
+    - contraception
+    - contraceptive
+    - OCP
+    - oral contraceptive
+    - emergency contraception
+    - levonorgestrel
+    - ulipristal
+    - ethinyl estradiol
+
+  Osteoporosis therapies:
+    - osteoporosis
+    - alendronate
+    - risedronate
+    - zoledronic
+    - denosumab
+    - romosozumab
+    - teriparatide
+
+  Dental anti-infectives:
+    - dental
+    - odontogenic
+    - amoxicillin
+    - amoxicillin-clavulanate
+    - clindamycin
+    - metronidazole
+    - chlorhexidine
+
+  Medication safety & DDI:
+    - medication safety
+    - drug interaction
+    - DDI
+    - QT prolongation
+    - serotonin syndrome
+    - hypoglycemia
+    - hyperkalemia
+    - renal dosing
+    - shortage
+    - recall
+
 conference_keywords:
-  - ASCO
-  - SABCS
-  - ESMO
-  - AACR
-  - ASH
+  - ACC
+  - AHA
+  - ESC
+  - EHRA
+  - ADA
+  - EASD
+  - DDW
+  - AAN
+  - ACOG
+  - AAFP
+  - APhA
   - abstract
+  - guideline
   - conference
   - congress
-  - "#ASCO"
-  - "#SABCS"
-  - "#ESMO"
+  - annual meeting

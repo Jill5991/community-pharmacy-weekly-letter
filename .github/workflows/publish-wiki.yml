@@ -72,9 +72,9 @@ jobs:
 
           # Rebuild Home.md index (newest first)
           {
-            echo "# 乳癌治療趨勢週報"
+            echo "# 社區藥局每週情報"
             echo ""
-            echo "> 每週自動生成 · 資料來源：OpenEvidence、OncDaily、OncLive、ESMO、ClinicalTrials.gov"
+            echo "> 每週自動生成 · 資料來源：OpenEvidence、FDA Drug Safety、Medscape、Pharmacy Times、Drug Topics、CrossRef journals"
             echo ""
             echo "| 週次 | 連結 |"
             echo "|------|------|"

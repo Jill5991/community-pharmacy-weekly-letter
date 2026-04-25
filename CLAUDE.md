@@ -1,13 +1,27 @@
-# CLAUDE.md — Breast Cancer Weekly Report
+# CLAUDE.md — Community Pharmacy Weekly Letter
 
 ## Project Purpose
 
-Auto-generate weekly Markdown reports on breast cancer treatment trends from:
+This repository generates a **community-pharmacy weekly letter** in Traditional Chinese.
+The report is designed for outpatient / community pharmacy use and prioritises updates relevant to:
+
+- 家醫 / 基層照護
+- 新陳代謝科
+- 腸胃科
+- 心臟內科
+- 神經內科
+- 婦產科
+- 牙科
+
+Core source families:
+
 - OpenEvidence MCP (`mcp__openevidence__oe_ask`)
 - PubMed MCP (`mcp__claude_ai_PubMed__search_articles`)
-- ClinicalTrials.gov MCP (`mcp__claude_ai_Clinical_Trials__search_trials`)
-- CrossRef API (via `python main.py journals`)
-- Web news (OncDaily RSS, OncLive/ESMO via Google News RSS)
+- CrossRef journals (`uv run python main.py journals`)
+- Web / news feeds (`uv run python main.py scrape`)
+
+This is **not** a disease-specific oncology report anymore.
+Every paragraph should answer: "What should a community pharmacist do differently this week?"
 
 ---
 
@@ -20,19 +34,18 @@ Auto-generate weekly Markdown reports on breast cancer treatment trends from:
 PREV=$(ls reports/ -t | head -1)
 echo "Previous report: $PREV"
 
-# 2. Read it fully — note every trial, drug approval, and section topic covered
-# 3. Grep key trial names to see what's already documented
-grep -E "DESTINY-Breast|ASCENT|NATALEE|monarchE|VIKTORIA|EMBER|TROPION|INAVO|SERENA" reports/$PREV
+# 2. Read it fully — note every approval, warning, shortage, DDI, and workflow change already covered
+# 3. Grep recurring topics to avoid repetition
+grep -E "GLP-1|SGLT2|NOAC|statin|heart failure|PPI|H\\. pylori|IBD|migraine|epilepsy|dementia|HRT|OCP|DDI|shortage|recall" reports/$PREV
 ```
 
-After reading the previous report, answer these before writing:
-- Which trials were already covered with final/mature data? → **skip entirely**
-- Which trials had interim data last week? → include only if new follow-up published
-- Which drug approvals were already documented? → **skip unless label expanded**
+Before drafting, answer:
 
-**Do NOT repeat** any finding with identical numbers. Mark new follow-up data explicitly: `[更新]` before the subsection heading, and state what changed vs last week.
+- Which items were already reported with the same recommendation? → **skip**
+- Which items are real follow-ups (label expansion, new warning, new monitoring advice)? → keep with `[更新]`
+- Which items change counselling / dispensing / monitoring **this week**? → surface first
 
-If a section has no genuinely new data this week: write `_本週無新訊號_` and move on.
+If a specialty section has no real update this week, write `_本週無新訊號_`.
 
 ---
 
@@ -42,132 +55,156 @@ If a section has no genuinely new data this week: write `_本週無新訊號_` a
 reports/YYYY-WNN.md
 ```
 
-Use ISO week number: `python3 -c "from datetime import date; d=date.today(); print(f'{d.year}-W{d.isocalendar()[1]:02d}')"`.
+Use ISO week number:
+
+```bash
+python3 -c "from datetime import date; d=date.today(); print(f'{d.year}-W{d.isocalendar()[1]:02d}')"
+```
 
 ---
 
-## Report Structure
+## Weekly Report Structure
 
-### Required Sections (繁體中文)
+### Required 12-section structure (繁體中文)
 
-```
-# 乳癌治療趨勢週報 — YYYY-WNN
+```md
+# 社區藥局每週情報 — YYYY-WNN
 
-> 生成日期：YYYY-MM-DD｜資料來源：...
+> 生成日期：YYYY-MM-DD
+> 核心合作科別：家醫 / 內分泌 / 腸胃 / 心臟 / 神經 / 婦產 / 牙科
 > 涵蓋期間：...
+> 來源：...
 
----
+## 一、摘要
+（本週 5 個最重要變化）
 
-## 摘要
-（本週五大訊號 — bullet points, concrete numbers）
-
-## 一、HER2 靶向治療
-## 二、ADC 在 TNBC
-## 三、HR+/HER2− 內分泌治療
-## 四、CDK4/6 Inhibitor：輔助治療確立
-## 五、PARP Inhibitor 與 BRCA 族群
-## 六、免疫治療 (TNBC)
-## 七、早期乳癌：手術、放療、風險分層
-## 八、進行中高優先試驗追蹤
-## 九、台灣臨床情境備註
-## 十、本週 Key Takeaways
-
-## 十一、蜥蜴LLM 點評
-（OpenEvidence分類：practice-changing vs hypothesis-generating）
-
-## 十二、媒體動態
-（OncDaily / OncLive / ESMO news table）
-
-## 文獻速報 — CrossRef 期刊
-（LLM-filtered JCO articles）
+## 二、家醫 / 基層照護
+## 三、新陳代謝科
+## 四、腸胃科
+## 五、心臟內科
+## 六、神經內科
+## 七、婦產科
+## 八、牙科
+## 九、藥物安全警訊
+## 十、重要交互作用 / DDI
+## 十一、本週 Takeaways
+## 十二、OpenEvidence 點評
 ```
 
-Sections without new data this week should say: `_本週無新訊號_`
+For each specialty section, prefer this mini-format:
+
+1. 本週更新
+2. 對社區藥局的意義
+3. 建議行動 / 轉介 / 監測 / 衛教
+
+Optional appendices after the 12 core sections:
+
+- `## 媒體動態`
+- `## 文獻速報`
 
 ---
 
-## Writing Style
+## Writing Rules
 
-- Language: **繁體中文**，英文術語保留原文（T-DXd, HR, PFS, iDFS 等）
-- Every clinical claim must cite trial name + author + journal + DOI
-- Tables: use Markdown tables for comparative data (trial vs control arm)
-- Numbers: always include HR, CI, p-value when available
-- Avoid vague superlatives; every "significant" needs a number
+- Language: **Traditional Chinese**
+- Keep drug names, guideline names, and abbreviations in English
+- Prioritise practical outpatient issues: dose, monitoring, contraindications, counselling, adherence, shortage alternatives
+- Avoid vague claims like "important" or "significant" without explaining the practice impact
+- Cite journal / guideline / regulator / news source whenever possible
+
+### Pregnancy / women’s health format
+
+If a drug update affects pregnancy, fertility, breastfeeding, HRT, or contraception, explicitly include:
+
+- `Pregnancy:` can use / avoid / insufficient evidence / trimester-specific note
+- `Lactation:` compatible / caution / avoid
+- `Contraception:` whether backup contraception or counselling is needed
+
+Do **not** use outdated pregnancy-letter shorthand alone without explanation.
+
+### DDI format
+
+Every major DDI entry should follow this format:
+
+```md
+| 組合 | 嚴重度 | 機轉 | 可能臨床後果 | 社區藥局處置 |
+|------|--------|------|--------------|--------------|
+```
+
+Prefer concrete actions:
+
+- avoid combination
+- stagger administration
+- reduce dose
+- monitor ECG / potassium / glucose / INR / bleeding
+- refer back to prescriber
 
 ---
 
 ## Data Pipeline
 
-Run in order before writing:
+Run before writing:
 
 ```bash
-uv run python main.py scrape          # OncDaily + OncLive + ESMO news
-uv run python main.py journals        # JCO CrossRef (keyword pre-screened)
+uv run python main.py scrape
+uv run python main.py journals
 ```
 
-For full pipeline (including Twitter if credentials available):
+If Twitter credentials are available:
 
 ```bash
 uv run python main.py run
 ```
 
-Cached data locations:
-- `data/webscrape_cache.json` — web news articles
-- `data/journals_cache.json` — CrossRef journal articles (pre-screened, not yet final-filtered)
+Cached files:
 
-**CrossRef filtering note:** The Python fetcher applies a keyword pre-screen only (broad net).
-When writing the report, read `data/journals_cache.json` and **filter in-session** — discard any
-article whose primary topic is not breast cancer (e.g. gastroesophageal articles that share HER2).
-Only include articles confirmed breast-cancer-relevant in the `## 文獻速報` section.
+- `data/webscrape_cache.json`
+- `data/journals_cache.json`
+
+Use the Python-collected cache as a **candidate pool**, then filter manually in-session for relevance to community pharmacy.
 
 ---
 
-## 蜥蜴LLM 點評 Section
+## OpenEvidence Section
 
 Use `mcp__openevidence__oe_ask` with a prompt like:
 
-```
-Based on the following breast cancer findings from this week, classify each as:
-- Practice-changing (changes standard of care NOW)
-- Hypothesis-generating (promising but needs confirmation)
-- Context-dependent (changes practice for specific subgroup only)
+```text
+Based on the following community-pharmacy updates from this week, classify each as:
+- practice-changing now
+- operationally important for pharmacists
+- watchlist only
 
-[list findings with trial names and key numbers]
+[list findings]
 ```
 
-Extract result with: `result.extracted_answer_raw`
+The OpenEvidence section should not repeat the report.
+It should synthesise what is truly actionable vs merely interesting.
 
 ---
 
 ## After Writing
 
-1. Check word count: report should be 3000–8000 words
-2. Verify every table has header separators (`|---|---|`)
-3. Run `uv run python main.py report` if auto-generating from DB
-4. Commit: `git add reports/YYYY-WNN.md && git commit -m "report: YYYY-WNN"`
-5. Push → GitHub Action auto-publishes to Wiki
+1. Check that the 12 required sections are all present
+2. Confirm every specialty section has either a real update or `_本週無新訊號_`
+3. Confirm every DDI row includes a pharmacist action
+4. Check tables render correctly
+5. Run `uv run python main.py report` if needed
 
 ---
 
 ## Duplicate-Avoidance Checklist
 
-Before finalising, cross-check against the previous report:
+Before finalising:
 
 ```bash
 PREV=$(ls reports/ -t | head -2 | tail -1)
-# Check trial names
-grep -E "DESTINY-Breast|ASCENT|NATALEE|monarchE|VIKTORIA|EMBER|TROPION|INAVO|SERENA" reports/$PREV
-# Check HR/PFS numbers — if same numbers appear, it's a repeat
-grep -E "HR [0-9]|PFS [0-9]|iDFS [0-9]|ORR [0-9]" reports/$PREV | head -20
+grep -E "GLP-1|SGLT2|NOAC|statin|heart failure|PPI|H\\. pylori|IBD|migraine|epilepsy|dementia|HRT|OCP|DDI|shortage|recall" reports/$PREV
+grep -E "dose|monitor|warning|recall|interaction|contraindication|pregnancy|lactation" reports/$PREV | head -30
 ```
 
 Rules:
-- Same trial + same numbers → **delete the section**
-- Same trial + new data (updated follow-up, subgroup, approval) → keep with `[更新]` tag
-- Brand new trial → include normally
 
----
-
-## Switching to Another Cancer Type
-
-See `README.md` → "如何切換至其他癌種" for step-by-step instructions (DLBCL example included).
+- Same source + same recommendation + same key number → delete
+- Same topic + new warning / new label / new workflow implication → keep as `[更新]`
+- If nothing changes pharmacist behaviour, leave it out

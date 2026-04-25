@@ -1,36 +1,16 @@
-"""Fetch recent journal articles from CrossRef API and pre-screen for oncology relevance."""
+"""Fetch recent journal articles from CrossRef API and pre-screen for community-pharmacy relevance."""
 
 import asyncio
 import re
-import yaml
 from dataclasses import dataclass, field
 from datetime import date, timedelta
-from pathlib import Path
 from typing import Optional
 
 import httpx
 
 from . import config
 
-SOURCE_DIR = Path(__file__).parent.parent / "source"
 JATS_TAG = re.compile(r"<[^>]+>")
-
-# Pre-screen: two-tier filter.
-# Tier 1 — unambiguous BC terms: pass immediately.
-# Tier 2 — shared biomarkers (also used in gastric/lung/etc): only pass when
-#           a Tier-1 term is also present. This blocks gastroesophageal/lung
-#           articles that mention HER2/trastuzumab/T-DXd without "breast".
-_BC_DIRECT = [
-    "breast", "mammary", "TNBC", "ESR1",
-    "ribociclib", "palbociclib", "abemaciclib",   # CDK4/6 — primarily BC
-    "imlunestrant", "elacestrant",                 # SERD — BC-only
-    "DESTINY-Breast", "NATALEE", "monarchE",       # BC trial names
-]
-_SHARED_TERMS = [
-    "HER2", "trastuzumab", "pertuzumab", "T-DXd", "Enhertu",
-    "sacituzumab", "olaparib", "talazoparib", "fulvestrant",
-    "CDK4", "CDK6", "ASCENT",
-]
 
 
 @dataclass
@@ -47,13 +27,11 @@ class JournalArticle:
 
 
 def _load_journals() -> list[dict]:
-    data = yaml.safe_load((SOURCE_DIR / "journals.yml").read_text())
-    return data.get("journals", [])
+    return config.journals()
 
 
 def _crossref_email() -> str:
-    data = yaml.safe_load((SOURCE_DIR / "journals.yml").read_text())
-    return data.get("crossref_email", "")
+    return config.crossref_email()
 
 
 def _clean_abstract(raw: str) -> str:
@@ -88,12 +66,9 @@ def _extract_tags(text: str) -> list[str]:
     return list(dict.fromkeys(k for k in config.keywords() if k.lower() in tl))
 
 
-def _passes_prescreen(text: str) -> bool:
+def _passes_prescreen(text: str, keywords: list[str]) -> bool:
     tl = text.lower()
-    if any(t.lower() in tl for t in _BC_DIRECT):
-        return True
-    # Shared biomarkers only count when a direct BC term is also present
-    return False
+    return any(t.lower() in tl for t in keywords)
 
 
 def _pub_date(item: dict) -> Optional[str]:
@@ -123,7 +98,8 @@ async def _fetch_journal(
     issn = journal["issn"]
     days_back = journal.get("days_back", 14)
     max_items = journal.get("max_items", 30)
-    bc_filter = journal.get("bc_filter", True)
+    topic_filter = journal.get("topic_filter", journal.get("bc_filter", True))
+    prescreen_keywords = journal.get("prescreen_keywords", config.keywords())
     from_date = (date.today() - timedelta(days=days_back)).isoformat()
 
     params = {
@@ -137,7 +113,7 @@ async def _fetch_journal(
         r = await client.get(
             "https://api.crossref.org/works",
             params=params,
-            headers={"User-Agent": f"breast-cancer-uptodate/1.0 (mailto:{email})"},
+            headers={"User-Agent": f"community-pharmacy-weekly-letter/1.0 (mailto:{email})"},
             timeout=25,
         )
         r.raise_for_status()
@@ -151,7 +127,7 @@ async def _fetch_journal(
             continue
         abstract = _clean_abstract(item.get("abstract", ""))
 
-        if bc_filter and not _passes_prescreen(title + " " + abstract):
+        if topic_filter and not _passes_prescreen(title + " " + abstract, prescreen_keywords):
             continue
 
         authors_raw = item.get("author", [])
@@ -193,7 +169,7 @@ def format_articles_md(results: dict[str, list[JournalArticle]]) -> str:
         return ""
 
     lines = ["\n## 文獻速報 — CrossRef 期刊\n"]
-    lines.append("> 資料來源：CrossRef API · 關鍵詞預篩後由 Claude 在報告生成時確認相關性\n")
+    lines.append("> 資料來源：CrossRef API · 關鍵詞預篩後由 Claude 在報告生成時確認是否屬於社區藥局實務重點\n")
 
     for journal_name, articles in results.items():
         if not articles:
